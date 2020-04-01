@@ -1,0 +1,87 @@
+<style>
+  .btn-space {
+    margin-right: 10px;
+  }
+
+  myModal {
+    z-index: 2147483647;
+  }
+
+  .disabledDiv {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+</style>
+
+<div ng-controller="EnderecoIncluirAlterarController as endCtrl">
+  <div
+    class="container"
+    style="overflow-y: auto; overflow-x: hidden; height: 425px"
+  >
+    <form>
+      <div class="mx-auto" style="width: 200px;">
+      </div>
+      <div class="form-group">
+        <label for="cep">CEP: </label>
+        <input
+          type="nome"
+          class="form-control"
+          id="cep"
+          ng-model="endCtrl.service.endereco.cep"
+          ui-mask="99.999-999" 
+          ng-blur="endCtrl.buscarCEP(endCtrl.service.endereco.cep)"
+        />
+      </div>
+      <div class="form-group">
+        <label for="uf">UF: </label>
+        <div>
+          <select
+            style="width: 250px; height: 38px;"
+            ng-class="{'disabledDiv': endCtrl.listaUF.length === 0, 'custom-select custom-select-sm': true}"
+            id="uf" 
+            ng-model="endCtrl.service.endereco.uf"
+          >
+            <option value="">-- UF --</option>
+            <option value="{{ item.id }}" ng-repeat="item in endCtrl.listaUF track by item.id">{{ item.desc }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="localidade">Cidade: </label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="localidade"
+          ng-model="endCtrl.service.endereco.localidade"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="bairro">Bairro: </label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="bairro"
+          ng-model="endCtrl.service.endereco.bairro"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="logradouro">Logradouro: </label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="logradouro"
+          ng-model="endCtrl.service.endereco.logradouro"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="complemento">Complemento: </label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="complemento"
+          ng-model="endCtrl.service.endereco.complemento"
+        ></textarea>
+      </div>
+    </form>
+  </div>
+</div>
