@@ -25,6 +25,24 @@ function EnderecoIncluirAlterarController(
   /**METODOS DE INICIALIZACAO */
   vm.init = function () {};
 
+  vm.buscarCEP = function(cep){
+    if (cep) {
+      vm.HSS.buscarCEP(cep).then(function (response) {
+        if (response.data.erro) {
+          alert("Erro ao buscar as informações do CEP, favor conferir o número digitado.");
+          vm.service.endereco.cep = "";
+        } else {
+          vm.service.endereco.uf = response.data.uf;
+          vm.service.endereco.localidade = response.data.localidade;
+          vm.service.endereco.bairro = response.data.bairro;
+          vm.service.endereco.logradouro = response.data.logradouro;
+          vm.service.endereco.complemento = response.data.complemento;
+          $("#uf").val(response.data.uf);
+        }
+      });
+    }
+  }
+
   vm.listaUF = [
     { "id": "RO", "desc": "RO" },
     { "id": "AC", "desc": "AC" },
@@ -54,16 +72,4 @@ function EnderecoIncluirAlterarController(
     { "id": "GO", "desc": "GO" },
     { "id": "DF", "desc": "DF" }
   ];
-
-  vm.buscarCEP = function(cep){
-    vm.HSS.buscarCEP(cep).then(function (response) {
-      vm.service.endereco.uf = response.data.uf;
-      vm.service.endereco.localidade = response.data.localidade;
-      vm.service.endereco.bairro = response.data.bairro;
-      vm.service.endereco.logradouro = response.data.logradouro;
-      vm.service.endereco.complemento = response.data.complemento;
-      $("#uf").val(response.data.uf);
-    });
-  }
-
 }

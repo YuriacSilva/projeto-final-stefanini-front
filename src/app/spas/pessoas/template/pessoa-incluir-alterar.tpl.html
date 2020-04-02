@@ -59,12 +59,11 @@
           <label for="nomePerfil">Perfil</label>
           <div>
             <select
-              style="width: 350px; height: 200px;"
+              style="width: 200px; height: 100px;"
               ng-class="{'disabledDiv': vm.listaPerfil.length === 0, 'custom-select custom-select-sm': true}"
               ng-options="item as item.nome for item in vm.listaPerfil track by item.id"
               ng-model="vm.perfil"
               multiple
-              ng-click="vm.mostrarValor()"
             >
               <option value="">-- PERFIL --</option>
             </select>
@@ -95,13 +94,15 @@
         </label>
       </div>
       <div class="form-group">
-        <img alt="Foto" id="dadosAnexo" src="" style="width:118px; height:140px;" />
+        <img alt="Foto" id="dadosAnexo" 
+          data-ng-src="{{vm.imagemPadrao}}" 
+          style="width:128px; height:128px;" />
         <input 
           type="file" 
           id="file" 
           files-input 
           ng-model="vm.foto"
-          ng-change="vm.testeFuncao()" 
+          ng-change="vm.exibirImagem()" 
         />
         <button 
           type="button"
@@ -109,12 +110,6 @@
           Teste
         </button>
       </div>
-      <script>
-        function myFunction() {
-          var x = document.getElementById("mySelect").value;
-          document.getElementById("demo").innerHTML = "You selected: " + x;
-        }
-      </script>
       <div>
         <div style="text-align: right;">
           <img
@@ -216,7 +211,6 @@
           <button
             type="button"
             class="btn btn-primary btn-space"
-            data-dismiss="modal"
             ng-click="vm.salvarEndereco(vm.service.endereco)"
           >
             Salvar

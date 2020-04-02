@@ -49,6 +49,7 @@ function PessoaIncluirAlterarController(
   vm.foto;
   vm.dadosAnexo;
   vm.nomeAnexo;
+  vm.imagemPadrao = "../../../../app/imagens/default_portrait.jpg";
 
   vm.service = EnderecoService;
 
@@ -116,13 +117,14 @@ function PessoaIncluirAlterarController(
   };
 
   vm.incluir = function () {
-    vm.pessoa.dataNascimento = vm.formataDataJava(vm.pessoa.dataNascimento);
-
+    
     var objetoDados = angular.copy(vm.pessoa);
+    
+    objetoDados.dataNascimento = vm.formataDataJava(vm.pessoa.dataNascimento);
+    
     vm.enviarArquivo();
     objetoDados.nomeAnexo = angular.copy(vm.nomeAnexo);
     objetoDados.dadosAnexo = angular.copy(vm.dadosAnexo);
-    console.log(vm.dadosAnexo);
     var listaEndereco = [];
     angular.forEach(objetoDados.enderecos, function (value, key) {
       if (value.complemento.length > 0) {
@@ -254,13 +256,22 @@ function PessoaIncluirAlterarController(
   }
 
   vm.salvarEndereco = function (endereco) {
-    if(endereco.id){
+    if (
+      endereco.cep == null ||
+      endereco.uf == null ||
+      endereco.localidade == null ||
+      endereco.bairro == null ||
+      endereco.logradouro == null ||
+      endereco.complemento == null
+      ) {
+        alert("Todos os campos de Endereço são obrigatórios, favor verificar o preenchimento de todos os campos.");
+    } else if (endereco.id) {
       vm.alterar(vm.urlEndereco, endereco).then(
         function () {
           vm.init();
+          vm.limparTela();
         });
-    }
-    else {
+    } else {
       if(vm.acao == "Editar"){
         endereco.idPessoa = vm.pessoa.id;
         vm.salvar(vm.urlEndereco, endereco).then(
@@ -274,26 +285,26 @@ function PessoaIncluirAlterarController(
           vm.pessoa.enderecos.push(angular.copy(endereco));
         }
       }
+      vm.limparTela();
     }
     vm.service.limpar();
-  }
-
-  vm.mostrarValor = function(){
-    console.log(vm.perfil);
   }
 
   vm.enviarArquivo = function(){
     vm.nomeAnexo = angular.copy(vm.foto[0].name);
     vm.dadosAnexo = angular.copy($("#dadosAnexo").attr("src"));
+    console.log(vm.foto);
   }
 
-  vm.testeFuncao = function () {
-    var preview = document.querySelectorAll('img').item(0);
+  vm.exibirImagem = function () {
+    var preview = document.getElementById("dadosAnexo");
     var file = document.querySelector('input[type=file').files[0];
     var reader = new FileReader();
 
+    console.log(document.querySelector('input[type=file').files);
+
     reader.onloadend = function () {
-        preview.src = reader.result; // Carrega a imagem em base64
+        preview.src = reader.result;
     };
 
     if (file) {
@@ -302,7 +313,7 @@ function PessoaIncluirAlterarController(
         preview.src = "";
     }
     vm.enviarArquivo();
-}
+  }
 
   /**METODOS AUXILIARES */
   vm.formataDataJava = function (data) {
