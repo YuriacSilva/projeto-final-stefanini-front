@@ -14,61 +14,71 @@
 </style>
 
 <div ng-init="vm.init()">
-  <div
-    class="container"
-    style="overflow-y: auto; overflow-x: hidden; height: 425px"
-  >
+  <div class="container" style="overflow-y: auto; overflow-x: hidden; height: 425px">
     <form>
       <div class="mx-auto" style="width: 200px;">
         <h5 class="modal-title">{{vm.tituloTela}}</h5>
       </div>
       <div class="form-group">
-        <label for="nomePessoa">Nome: </label>
-        <input
-          type="nome"
-          class="form-control"
-          id="nomePessoa"
-          ng-model="vm.pessoa.nome"
-          placeholder="Digite o nome da pessoa ..."
+        <div class="row">
+          <div class="col-8">
+            <label for="nomePessoa">Nome: </label>
+            <input 
+              type="nome" class="form-control" id="nomePessoa" 
+              ng-model="vm.pessoa.nome"
+              placeholder="Digite o nome da pessoa ..." 
+            />
+            <label for="emailPessoa">Email</label>
+            <input 
+              type="text" class="form-control" id="emailPessoa" 
+              ng-model="vm.pessoa.email"
+              placeholder="name@example.com" 
+            />
+          </div>
+          <div class="col-4" align="center">
+            <img 
+              ng-if="vm.acao == 'Editar' && vm.imagemPadrao"
+              alt="Foto" 
+              id="imagem" 
+              src="{{ vm.imagemPadrao }}" 
+              data-ng-src="{{ vm.pessoa.imagem }}"
+              style="width:128px; height:128px;" 
+            />
+            <img 
+              ng-if="vm.acao != 'Editar' && vm.imagemPadrao"
+              alt="Foto" 
+              id="imagem" 
+              src="{{ vm.imagemPadrao }}"  
+              style="width:128px; height:128px;" 
+            />
+            <input 
+              type="file" id="file" files-input ng-model="vm.foto" 
+              ng-change="vm.exibirImagem()" 
+            />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="nascimentoPessoa" style="width: 250px;">Data de nascimento</label>
+        <input 
+          type="text" class="form-control" id="nascimentoPessoa" 
+          ng-model="vm.pessoa.dataNascimento"
+          ui-mask="99/99/9999" style="width: 120px;" 
         />
       </div>
       <div class="form-group">
-        <label for="emailPessoa">Email</label>
-        <input
-          type="text"
-          class="form-control"
-          id="emailPessoa"
-          ng-model="vm.pessoa.email"
-          placeholder="name@example.com"
-        />
-      </div>
-        <div class="form-group">
-          <label for="nascimentoPessoa" style="width: 250px;"
-            >Data de nascimento</label
+        <label for="nomePerfil">Perfil</label>
+        <div>
+          <select 
+            style="width: 200px; height: 100px;"
+            ng-class="{'disabledDiv': vm.listaPerfil.length === 0, 'custom-select custom-select-sm': true}"
+            ng-options="item as item.nome for item in vm.listaPerfil track by item.id" 
+            ng-model="vm.perfil" 
+            multiple
           >
-          <input
-            type="text"
-            class="form-control"
-            id="nascimentoPessoa"
-            ng-model="vm.pessoa.dataNascimento"
-            ui-mask="99/99/9999"
-            style="width: 120px;"
-          />
+          </select>
         </div>
-        <div class="form-group">
-          <label for="nomePerfil">Perfil</label>
-          <div>
-            <select
-              style="width: 200px; height: 100px;"
-              ng-class="{'disabledDiv': vm.listaPerfil.length === 0, 'custom-select custom-select-sm': true}"
-              ng-options="item as item.nome for item in vm.listaPerfil track by item.id"
-              ng-model="vm.perfil"
-              multiple
-            >
-              <option value="">-- PERFIL --</option>
-            </select>
-          </div>
-          <!--
+        <!--
           <label for="perfisCadastrados">Perfil</label>
           <div>
             <select
@@ -79,47 +89,25 @@
             >
             </select>
           </div>-->
-        </div>
+      </div>
 
       <div class="form-check">
-        <input
-          class="form-check-input"
-          ng-checked="vm.pessoa.situacao"
-          ng-click="vm.pessoa.situacao = !vm.pessoa.situacao"
-          type="checkbox"
-          id="defaultCheck1"
+        <input 
+          class="form-check-input" ng-checked="vm.pessoa.situacao"
+          type="checkbox" id="defaultCheck1"
+          ng-click="vm.pessoa.situacao = !vm.pessoa.situacao"  
         />
         <label class="form-check-label" for="defaultCheck1">
           Situação
         </label>
       </div>
-      <div class="form-group">
-        <img alt="Foto" id="dadosAnexo" 
-          data-ng-src="{{vm.imagemPadrao}}" 
-          style="width:128px; height:128px;" />
-        <input 
-          type="file" 
-          id="file" 
-          files-input 
-          ng-model="vm.foto"
-          ng-change="vm.exibirImagem()" 
-        />
-        <button 
-          type="button"
-          ng-click="vm.enviarArquivo()">
-          Teste
-        </button>
-      </div>
       <div>
         <div style="text-align: right;">
-          <img
-            src="../../../app/imagens/bootstrap-icons/icons/document-richtext.svg"
-            style="cursor: pointer;"
-            alt=""
-            width="25"
-            height="25"
-            title="Incluir Endereço"
-            ng-click="vm.abrirModal()"
+          <img 
+            src="../../../app/imagens/bootstrap-icons/icons/document-richtext.svg" 
+            style="cursor: pointer;" alt=""
+            width="25" height="25" title="Incluir Endereço" 
+            ng-click="vm.abrirModal()" 
           />
         </div>
         <table class="table table-hover">
@@ -140,25 +128,19 @@
               <td>{{endereco.uf}}</td>
               <td>{{endereco.logradouro}}</td>
               <td>
-                <img
-                  src="../../../app/imagens/bootstrap-icons/icons/pencil.svg"
-                  style="cursor: pointer;"
-                  alt=""
-                  width="25"
-                  height="25"
-                  title="Editar"
-                  ng-click="vm.abrirModal(endereco, $index)"
+                <img 
+                  src="../../../app/imagens/bootstrap-icons/icons/pencil.svg" 
+                  style="cursor: pointer;" alt=""
+                  width="25" height="25" title="Editar" 
+                  ng-click="vm.abrirModal(endereco, $index)" 
                 />
               </td>
               <td>
-                <img
-                  src="../../../app/imagens/bootstrap-icons/icons/trash.svg"
-                  style="cursor: pointer;"
-                  alt=""
-                  width="25"
-                  height="25"
-                  title="Excluir"
-                  ng-click="vm.remover(endereco, 'ENDERECO', $index)"
+                <img 
+                  src="../../../app/imagens/bootstrap-icons/icons/trash.svg" 
+                  style="cursor: pointer;" alt=""
+                  width="25" height="25" title="Excluir" 
+                  ng-click="vm.remover(endereco, 'ENDERECO', $index)" 
                 />
               </td>
             </tr>
@@ -167,15 +149,8 @@
       </div>
     </form>
   </div>
-  <div
-    class="row"
-    style="float: right; padding-top: 30px; padding-right: 20px;"
-  >
-    <button
-      type="button"
-      class="btn btn-primary btn-space"
-      ng-click="vm.incluir(vm.pessoa)"
-    >
+  <div class="row" style="float: right; padding-top: 30px; padding-right: 20px;">
+    <button type="button" class="btn btn-primary btn-space" ng-click="vm.incluir(vm.pessoa)">
       Salvar
     </button>
     <button type="button" class="btn btn-danger" ng-click="vm.cancelar()">
@@ -183,16 +158,8 @@
     </button>
   </div>
 
-  <div
-    class="modal fade"
-    id="modalEndereco"
-    role="dialog"
-    data-backdrop="false"
-  >
-    <div 
-      class="modal-dialog"
-      ng-controller="EnderecoIncluirAlterarController as endCtrl"
-    >
+  <div class="modal fade" id="modalEndereco" role="dialog" data-backdrop="false">
+    <div class="modal-dialog" ng-controller="EnderecoIncluirAlterarController as endCtrl">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -202,24 +169,17 @@
           </button>
         </div>
         <div class="modal-body">
-          <div
-            ng-include="'app/spas/endereco/template/endereco-incluir-alterar.tpl.html'"
-          ></div>
+          <div ng-include="'app/spas/endereco/template/endereco-incluir-alterar.tpl.html'"></div>
         </div>
-
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-primary btn-space"
+          <button 
+            type="button" 
+            class="btn btn-primary btn-space" 
             ng-click="vm.salvarEndereco(vm.service.endereco)"
           >
             Salvar
           </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            ng-click="vm.limparTela()"
-          >
+          <button type="button" class="btn btn-danger" ng-click="vm.limparTela()">
             Cancelar
           </button>
         </div>

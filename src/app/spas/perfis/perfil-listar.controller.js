@@ -19,75 +19,45 @@ function PerfilListarController(
 
   vm = this;
 
-  vm.qdePorPagina = 5;
+  vm.qtdPorPagina = 5;
   vm.ultimoIndex = 0;
-  vm.contador = 0;
+  vm.totalResultados = 0;
+  vm.paginaAtual = 0;
 
   vm.url = "http://localhost:8080/treinamento/api/perfils/";
+  vm.urlPaginada = "http://localhost:8080/treinamento/api/perfils/paginados?";
 
   vm.init = function () {
-    HackatonStefaniniService.listar(vm.url).then(
-      function (responsePerfis) {
-        if (responsePerfis.data !== undefined) {
-          vm.listaPerfis = responsePerfis.data;
-        }
-        vm.listaPerfisMostrar = [];
-        var max = vm.listaPerfis.length > vm.qdePorPagina ? vm.qdePorPagina : vm.listaPerfis.length;
-
-        vm.qdePaginacao = new Array(vm.listaPerfis.length % vm.qdePorPagina === 0 ?
-          vm.listaPerfis.length / vm.qdePorPagina :
-          parseInt(vm.listaPerfis.length / vm.qdePorPagina) + 1);
-        vm.currentPage = 1;
-        for (var count = 0; count < max; count++) {
-          vm.listaPerfisMostrar.push(vm.listaPerfis[count]);
-          vm.ultimoIndex++;
-        }
-        vm.listaPerfisMostrar.sort(function (a, b) {
-          return a.id - b.id;
-        });
-      }
-    );
+    vm.paginaAtual = 1;
+    vm.paginar();
   };
+
+  vm.paginar = function () {
+    HackatonStefaniniService.listar(
+      vm.urlPaginada + "indexAtual=" + vm.ultimoIndex + "&qtdPagina=" + vm.qtdPorPagina
+      ).then(
+        function (responsePerfis) {
+          console.log(responsePerfis.data);
+          vm.listaPerfis = responsePerfis.data.resultados;
+          vm.qtdPaginacao = new Array(responsePerfis.data.totalPaginas);
+        }
+      );
+  }
 
   vm.atualizarPaginanacao = function (index) {
-
-    if (index >= vm.currentPage)
-      vm.avancarPaginanacao(index);
-    else
-      vm.retrocederPaginanacao(index);
+    vm.paginaAtual = index + 1;
+    vm.ultimoIndex = index * vm.qtdPorPagina;
+    vm.paginar();
   };
 
-  vm.avancarPaginanacao = function (index) {
-
-    vm.listaPerfisMostrar = [];
-    vm.currentPage++;
-
-    var idx = angular.copy(vm.ultimoIndex);
-    var cont = vm.listaPerfis.length - vm.qdePorPagina;
-    for (var count = cont > vm.qdePorPagina ? vm.qdePorPagina : cont; count > 0; count--) {
-      vm.listaPerfisMostrar.push(vm.listaPerfis[idx++]);
-      vm.ultimoIndex++;
-      vm.contador++;
-    }
-    vm.listaPerfisMostrar.sort(function (a, b) {
-      return a.id - b.id;
-    });
+  vm.avancarPaginanacao = function () {
+    vm.atualizarPaginanacao(vm.paginaAtual);
   };
 
-  vm.retrocederPaginanacao = function (index) {
-
-    vm.listaPerfisMostrar = [];
-
-    vm.currentPage--;
-    var idx = vm.contador - 1;
-    vm.ultimoIndex = idx + 1;
-    for (var count = vm.qdePorPagina; count > 0; count--) {
-      vm.listaPerfisMostrar.push(vm.listaPerfis[idx--]);
-      vm.contador--;
+  vm.retrocederPaginanacao = function () {
+    if(vm.paginaAtual > 1) {
+      vm.atualizarPaginanacao(vm.paginaAtual - 2);
     }
-    vm.listaPerfisMostrar.sort(function (a, b) {
-      return a.id - b.id;
-    });
   };
 
   vm.editar = function (id) {

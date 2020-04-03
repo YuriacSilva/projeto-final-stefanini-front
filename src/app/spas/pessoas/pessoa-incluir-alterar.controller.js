@@ -29,7 +29,8 @@ function PessoaIncluirAlterarController(
     dataNascimento: null,
     enderecos: [],
     perfils: [],
-    situacao: false
+    situacao: false,
+    imagem: ""
   };
   vm.enderecoDefault = {
     id: null,
@@ -48,7 +49,6 @@ function PessoaIncluirAlterarController(
   vm.perfisCadastrados = [];
   vm.foto;
   vm.dadosAnexo;
-  vm.nomeAnexo;
   vm.imagemPadrao = "../../../../app/imagens/default_portrait.jpg";
 
   vm.service = EnderecoService;
@@ -76,9 +76,10 @@ function PessoaIncluirAlterarController(
               function (pessoaRetorno) {
                 if (pessoaRetorno !== undefined) {
                   vm.pessoa = angular.copy(pessoaRetorno);
-                  vm.perfisCadastrados = pessoaRetorno.perfils
+                  vm.perfisCadastrados = angular.copy(pessoaRetorno.perfils);
                   vm.pessoa.dataNascimento = vm.formataDataTela(pessoaRetorno.dataNascimento);
-                  vm.perfil = vm.pessoa.perfils;
+                  vm.perfil = angular.copy(vm.pessoa.perfils);
+                  console.log(pessoaRetorno);
                   // vm.pessoa.perfils = [];
                 }
               }
@@ -123,7 +124,6 @@ function PessoaIncluirAlterarController(
     objetoDados.dataNascimento = vm.formataDataJava(vm.pessoa.dataNascimento);
     
     vm.enviarArquivo();
-    objetoDados.nomeAnexo = angular.copy(vm.nomeAnexo);
     objetoDados.dadosAnexo = angular.copy(vm.dadosAnexo);
     var listaEndereco = [];
     angular.forEach(objetoDados.enderecos, function (value, key) {
@@ -291,13 +291,12 @@ function PessoaIncluirAlterarController(
   }
 
   vm.enviarArquivo = function(){
-    vm.nomeAnexo = angular.copy(vm.foto[0].name);
-    vm.dadosAnexo = angular.copy($("#dadosAnexo").attr("src"));
+    vm.dadosAnexo = angular.copy($("#imagem").attr("src"));
     console.log(vm.foto);
   }
 
   vm.exibirImagem = function () {
-    var preview = document.getElementById("dadosAnexo");
+    var preview = document.getElementById("imagem");
     var file = document.querySelector('input[type=file').files[0];
     var reader = new FileReader();
 
