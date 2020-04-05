@@ -124,7 +124,8 @@ function PessoaIncluirAlterarController(
     objetoDados.dataNascimento = vm.formataDataJava(vm.pessoa.dataNascimento);
     
     vm.enviarArquivo();
-    objetoDados.dadosAnexo = angular.copy(vm.dadosAnexo);
+    objetoDados.imagem = angular.copy(vm.dadosAnexo);
+    
     var listaEndereco = [];
     angular.forEach(objetoDados.enderecos, function (value, key) {
       if (value.complemento.length > 0) {
@@ -150,7 +151,7 @@ function PessoaIncluirAlterarController(
       objetoDados.perfils = vm.perfil;
     }
     if (vm.acao == "Cadastrar") {
-      vm.salvar(vm.urlPessoa + "anexos", objetoDados).then(
+      vm.salvar(vm.urlPessoa, objetoDados).then(
         function (pessoaRetorno) {
           listaEndereco.forEach(end => end.idPessoa = pessoaRetorno.id);
           pessoaRetorno.enderecos = angular.copy(listaEndereco);

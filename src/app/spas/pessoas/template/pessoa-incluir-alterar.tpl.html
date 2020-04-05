@@ -113,7 +113,6 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Cidade</th>
               <th scope="col">UF</th>
               <th scope="col">Logradouro</th>
@@ -123,7 +122,6 @@
           </thead>
           <tbody ng-repeat="endereco in vm.pessoa.enderecos track by $index">
             <tr>
-              <td>{{$index}}</td>
               <td>{{endereco.localidade}}</td>
               <td>{{endereco.uf}}</td>
               <td>{{endereco.logradouro}}</td>

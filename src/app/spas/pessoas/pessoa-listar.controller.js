@@ -38,7 +38,6 @@ function PessoaListarController(
       vm.urlPaginada + "indexAtual=" + vm.ultimoIndex + "&qtdPagina=" + vm.qtdPorPagina
       ).then(
         function (responsePessoas) {
-          console.log(responsePessoas.data);
           vm.listaPessoas = responsePessoas.data.resultados;
           vm.qtdPaginacao = new Array(responsePessoas.data.totalPaginas);
         }
